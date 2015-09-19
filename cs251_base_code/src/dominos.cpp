@@ -49,6 +49,7 @@ namespace cs251
     /*! \var b1 
      * \brief pointer to the body ground 
      */ 
+  
     b2Body* b1;  
     {
       
@@ -308,10 +309,213 @@ namespace cs251
       bd3.type = b2_dynamicBody;
       b2Body* body3 = m_world->CreateBody(&bd3);
       b2FixtureDef *fd3 = new b2FixtureDef;
-      fd3->density = 0.01f;
+      fd3->density = 40.0f;
       fd3->shape = new b2PolygonShape;
       fd3->shape = &shape2;
       body3->CreateFixture(fd3);
+    }
+    {
+    	//First Tilted Line
+    	b2PolygonShape funnelsr;
+    	funnelsr.SetAsBox(0.0f, 2.0f);
+    	b2BodyDef funnelbdr;
+    	funnelbdr.angle = -65;
+    	funnelbdr.position.Set(10.0f,40.0f);
+    	funnelbdr.type= b2_staticBody;
+
+    	    b2Body* funnelbr = m_world->CreateBody(&funnelbdr);
+	      	b2FixtureDef *funnelfr = new b2FixtureDef;
+	      	funnelfr->density = 40.0f;
+	      	funnelfr->shape = new b2PolygonShape;
+	      	funnelfr->shape = &funnelsr;
+	      	funnelbr->CreateFixture(funnelfr);
+
+    }
+    {
+    	// First Vertical Line
+    	b2PolygonShape funnelsr;
+    	funnelsr.SetAsBox(0.0f, 2.0f);
+    	b2BodyDef funnelbdr;
+    	funnelbdr.position.Set(11.5f,36.9f);
+    	funnelbdr.type= b2_staticBody;
+
+    	    b2Body* funnelbr = m_world->CreateBody(&funnelbdr);
+	      	b2FixtureDef *funnelfr = new b2FixtureDef;
+	      	funnelfr->density = 40.0f;
+	      	funnelfr->shape = new b2PolygonShape;
+	      	funnelfr->shape = &funnelsr;
+	      	funnelbr->CreateFixture(funnelfr);
+
+    }
+     {
+     	//Second Tilted Line
+    	b2PolygonShape funnelsr;
+    	funnelsr.SetAsBox(0.0f, 2.0f);
+    	b2BodyDef funnelbdr;
+    	funnelbdr.angle = 65;
+    	funnelbdr.position.Set(15.0f,40.0f);
+    	funnelbdr.type= b2_staticBody;
+
+    	    b2Body* funnelbr = m_world->CreateBody(&funnelbdr);
+	      	b2FixtureDef *funnelfr = new b2FixtureDef;
+	      	funnelfr->density = 40.0f;
+	      	funnelfr->shape = new b2PolygonShape;
+	      	funnelfr->shape = &funnelsr;
+	      	funnelbr->CreateFixture(funnelfr);
+
+    }
+    {
+    	// Second Vertical Line
+    	b2PolygonShape funnelsr;
+    	funnelsr.SetAsBox(0.0f, 2.0f);
+    	b2BodyDef funnelbdr;
+    	funnelbdr.position.Set(13.4f,36.9f);
+    	funnelbdr.type= b2_staticBody;
+
+    	    b2Body* funnelbr = m_world->CreateBody(&funnelbdr);
+	      	b2FixtureDef *funnelfr = new b2FixtureDef;
+	      	funnelfr->density = 40.0f;
+	      	funnelfr->shape = new b2PolygonShape;
+	      	funnelfr->shape = &funnelsr;
+	      	funnelbr->CreateFixture(funnelfr);
+
+    }
+    {
+      b2Body* spherebody;
+	
+      b2CircleShape circle;
+      circle.m_radius = 0.5;
+	
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 1.0f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 0.0f;
+	
+      for (int i = 0; i < 10; ++i)
+	{
+	  b2BodyDef ballbd;
+	  ballbd.type = b2_dynamicBody;
+	  ballbd.position.Set(14.0f, 39.6f + i*1.0f);
+	  spherebody = m_world->CreateBody(&ballbd);
+	  spherebody->CreateFixture(&ballfd);
+	}
+    }
+    {
+    	// Second Vertical Line
+    	b2PolygonShape funnelsr;
+    	funnelsr.SetAsBox(2.0f , 0.2f);
+    	b2BodyDef funnelbdr;
+    	funnelbdr.position.Set(9.4f,33.9f);
+    	funnelbdr.type= b2_staticBody;
+    	    b2Body* funnelbr = m_world->CreateBody(&funnelbdr);
+	      	b2FixtureDef *funnelfr = new b2FixtureDef;
+	      	funnelfr->density = 40.0f;
+	      	funnelfr->shape = new b2PolygonShape;
+	      	funnelfr->shape = &funnelsr;
+	      	funnelbr->CreateFixture(funnelfr);
+
+    }
+    {
+    	// Second Vertical Line
+    	b2PolygonShape funnelsr;
+    	funnelsr.SetAsBox(2.0f , 0.2f);
+    	b2BodyDef funnelbdr;
+    	funnelbdr.position.Set(15.6f,33.9f);
+    	funnelbdr.type= b2_staticBody;
+    	    b2Body* funnelbr = m_world->CreateBody(&funnelbdr);
+	      	b2FixtureDef *funnelfr = new b2FixtureDef;
+	      	funnelfr->density = 40.0f;
+	      	funnelfr->friction=2.0f;
+	      	funnelfr->shape = new b2PolygonShape;
+	      	funnelfr->shape = &funnelsr;
+	      	funnelbr->CreateFixture(funnelfr);
+
+    }
+    {
+    	// horizontal  Line
+    	/*
+    	b2PolygonShape funnelsr;
+    	funnelsr.SetAsBox(2.0f , 0.2f);
+    	b2BodyDef funnelbdr;
+    	funnelbdr.position.Set(12.5f,34.9f);
+    	funnelbdr.type= b2_dynamicBody;
+    	    b2Body* funnelbr = m_world->CreateBody(&funnelbdr);
+	      	b2FixtureDef *funnelfr = new b2FixtureDef;
+	      	funnelfr->density = 40.0f;
+	      	funnelfr->shape = new b2PolygonShape;
+	      	funnelfr->shape = &funnelsr;
+	      	funnelfr->friction = 0.5f;
+	      	funnelbr->CreateFixture(funnelfr);
+		*/
+    }
+    //second pulley system
+        {
+      b2BodyDef *bd = new b2BodyDef;
+      bd->type = b2_dynamicBody;
+      bd->position.Set(-10,15);
+      bd->fixedRotation = true;
+      
+      //The open box
+      b2FixtureDef *fd1 = new b2FixtureDef;
+      fd1->density = 3+.0;
+      fd1->friction = 0.5;
+      fd1->restitution = 0.f;
+      fd1->shape = new b2PolygonShape;
+      b2PolygonShape bs1;
+      bs1.SetAsBox(2,2, b2Vec2(0.f,-1.9f), 0);
+      fd1->shape = &bs1;
+      /*
+      b2FixtureDef *fd2 = new b2FixtureDef;
+      fd2->density = 10.0;
+      fd2->friction = 0.5;
+      fd2->restitution = 0.f;
+      fd2->shape = new b2PolygonShape;
+      b2PolygonShape bs2;
+      bs2.SetAsBox(0.2,2, b2Vec2(2.0f,0.f), 0);
+      fd2->shape = &bs2;
+      b2FixtureDef *fd3 = new b2FixtureDef;
+      fd3->density = 10.0;
+      fd3->friction = 0.5;
+      fd3->restitution = 0.f;
+      fd3->shape = new b2PolygonShape;
+      b2PolygonShape bs3;
+      bs3.SetAsBox(0.2,2, b2Vec2(-2.0f,0.f), 0);
+      fd3->shape = &bs3;
+       */
+      b2Body* box1 = m_world->CreateBody(bd);
+      box1->CreateFixture(fd1);
+      //box1->CreateFixture(fd2);
+      //box1->CreateFixture(fd3);
+
+      //The bar
+     // bd->position.Set(10,15);	
+     // fd1->density = 34.0;	  
+      //b2Body* box2 = m_world->CreateBody(bd);
+      //
+          	b2PolygonShape funnelsr;
+    	funnelsr.SetAsBox(2.0f , 0.2f);
+    	b2BodyDef funnelbdr;
+    	funnelbdr.position.Set(12.5f,34.9f);
+    	funnelbdr.type= b2_dynamicBody;
+    	    b2Body* funnelbr = m_world->CreateBody(&funnelbdr);
+	      	b2FixtureDef *funnelfr = new b2FixtureDef;
+	      	funnelfr->density = 40.0f;
+	      	funnelfr->shape = new b2PolygonShape;
+	      	funnelfr->shape = &funnelsr;
+	      	funnelfr->friction = 0.5f;
+	      	funnelbr->CreateFixture(funnelfr);
+      //box2->CreateFixture(fd1);
+
+      // The pulley joint
+      b2PulleyJointDef* myjoint = new b2PulleyJointDef();
+      b2Vec2 worldAnchorOnBody1(-8, 29); // Anchor point on body 1 in world axis
+      b2Vec2 worldAnchorOnBody2(8, 29); // Anchor point on body 2 in world axis
+      b2Vec2 worldAnchorGround1(-8, 34); // Anchor point for ground 1 in world axis
+      b2Vec2 worldAnchorGround2(8, 34); // Anchor point for ground 2 in world axis
+      float32 ratio = 1.0f; // Define ratio
+      myjoint->Initialize(box1, funnelbr, worldAnchorGround1, worldAnchorGround2, box1->GetWorldCenter(), funnelbr->GetWorldCenter(), ratio);
+      m_world->CreateJoint(myjoint);
     }
   }
 
