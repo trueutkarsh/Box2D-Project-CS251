@@ -18,6 +18,7 @@
 
 #include "cs251_base.hpp"
 #include <cstdio>
+
 using namespace std;
 using namespace cs251;
 
@@ -29,11 +30,11 @@ base_sim_t::base_sim_t()
 	m_world = new b2World(gravity);
 
 	m_text_line = 30;
-
+  m_contact = false;
 	m_point_count = 0;
-
+  
 	m_world->SetDebugDraw(&m_debug_draw);
-	
+  one = true;
 	m_step_count = 0;
 
 	b2BodyDef body_def;
@@ -61,7 +62,7 @@ void base_sim_t::pre_solve(b2Contact* contact, const b2Manifold* oldManifold)
   
   b2Fixture* fixtureA = contact->GetFixtureA();
   b2Fixture* fixtureB = contact->GetFixtureB();
-  
+ 
   b2PointState state1[b2_maxManifoldPoints], state2[b2_maxManifoldPoints];
   b2GetPointStates(state1, state2, oldManifold, manifold);
   
@@ -103,7 +104,51 @@ void base_sim_t::step(settings_t* settings)
       m_debug_draw.DrawString(5, m_text_line, "****PAUSED****");
       m_text_line += 15;
     }
-  
+
+    // my change
+    
+    if(m_contact == true && one ==true) {   
+
+      m_contact = false;
+      if(bodyB==sbody){
+        float sp = 4.3;
+        bodyB->SetTransform(b2Vec2(20.0f,25.0f),0.0f);
+        bodyB->SetLinearVelocity(b2Vec2(-5.0,0.0));
+        bodydiscl->SetAngularVelocity(-sp);
+        bodydiscr->SetAngularVelocity(-sp);
+        body1->SetAngularVelocity(-sp);
+        body2->SetAngularVelocity(-sp);
+        body3->SetAngularVelocity(-sp);
+      }
+      else if(bodyB==sbody1)
+      {
+
+         bodydiscl->SetAngularVelocity(-3.14/2.5);
+        bodydiscr->SetAngularVelocity(-3.14/2.5);
+        body1->SetAngularVelocity(-3.14/2.5);
+        body2->SetAngularVelocity(-3.14/2.5);
+        body3->SetAngularVelocity(-3.14/2.5);
+        one = false;
+      }
+      else if(one == true )
+      {
+
+        if(bodyA==bodycl)
+      {
+        bodyB->SetTransform(b2Vec2(11.5f,38.0f),0.0f);
+      bodyB->SetLinearVelocity(b2Vec2(0.0,50.0));  
+      }
+      else {
+      bodyB->SetTransform(b2Vec2(-36.0f,34.0f),0.0f);
+      bodyB->SetLinearVelocity(b2Vec2(0.0,41.0));
+    }
+
+      }
+
+
+    }
+ // mychange
+
   uint32 flags = 0;
   flags += settings->draw_shapes			* b2Draw::e_shapeBit;
   flags += settings->draw_joints			* b2Draw::e_jointBit;

@@ -103,6 +103,3 @@ clean:
 
 distclean: clean
 	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
-
-runexec:
-	@ ./$(BINDIR)/cs251_base	

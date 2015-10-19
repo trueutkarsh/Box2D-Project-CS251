@@ -16,10 +16,10 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-/* 
- * Base code for CS 251 Software Systems Lab 
+/*
+ * Base code for CS 251 Software Systems Lab
  * Department of Computer Science and Engineering, IIT Bombay
- * 
+ *
  */
 
 
@@ -29,7 +29,7 @@
 #include "render.hpp"
 #include <Box2D/Box2D.h>
 #include <cstdlib>
-
+#include<iostream>
 #define	RAND_LIMIT 32767
 
 namespace cs251
@@ -38,9 +38,9 @@ namespace cs251
   //! What is the difference between a class and a struct in C++?
   class base_sim_t;
   struct settings_t;
-  
+
   //! Why do we use a typedef
-  typedef base_sim_t* sim_create_fcn(); 
+  typedef base_sim_t* sim_create_fcn();
 
   //! Simulation settings. Some can be controlled in the GUI.
   struct settings_t
@@ -69,7 +69,7 @@ namespace cs251
       pause(0),
       single_step(0)
     {}
-    
+
     b2Vec2 view_center;
     float32 hz;
     int32 velocity_iterations;
@@ -91,20 +91,57 @@ namespace cs251
     int32 pause;
     int32 single_step;
   };
-  
+class QueryCallback : public b2QueryCallback 
+{//this function basically takes a point(m_point) and check whether it
+ // resides in the region specified by fixture(m_fixture).
+ //fixtures_are properties associated with objects
+public:
+    QueryCallback(const b2Vec2& point)
+    {
+        m_point = point;
+        m_fixture = NULL;
+
+    }
+
+    bool ReportFixture(b2Fixture* fixture)
+    { 
+        b2Body* body = fixture->GetBody();
+        if (body->GetType() == b2_dynamicBody)
+
+        {
+
+            bool inside = fixture->TestPoint(m_point);
+            if (inside)
+            {
+                m_fixture = fixture;
+
+                // We are done, terminate the query.
+                return false;
+            }
+        }
+
+        // Continue the query.
+        return true;
+    }
+
+    b2Vec2 m_point;//this the point on which query is applied.
+    b2Fixture* m_fixture;//through this we can access he target body.
+};
+
+
   struct sim_t
   {
     const char *name;
     sim_create_fcn *create_fcn;
 
-    sim_t(const char *_name, sim_create_fcn *_create_fcn): 
+    sim_t(const char *_name, sim_create_fcn *_create_fcn):
       name(_name), create_fcn(_create_fcn) {;}
   };
-  
+
   extern sim_t *sim;
-  
-  
-  const int32 k_max_contact_points = 2048;  
+
+
+  const int32 k_max_contact_points = 2048;
   struct contact_point_t
   {
     b2Fixture* fixtureA;
@@ -113,36 +150,53 @@ namespace cs251
     b2Vec2 position;
     b2PointState state;
   };
-  
+
   class base_sim_t : public b2ContactListener
   {
   public:
-    
+
     base_sim_t();
 
     //! Virtual destructors - amazing objects. Why are these necessary?
     virtual ~base_sim_t();
-    
+
     void set_text_line(int32 line) { m_text_line = line; }
     void draw_title(int x, int y, const char *string);
-    
+
     virtual void step(settings_t* settings);
 
     virtual void keyboard(unsigned char key) { B2_NOT_USED(key); }
     virtual void keyboard_up(unsigned char key) { B2_NOT_USED(key); }
-
-    void shift_mouse_down(const b2Vec2& p) { B2_NOT_USED(p); }
-    virtual void mouse_down(const b2Vec2& p) { B2_NOT_USED(p); }
-    virtual void mouse_up(const b2Vec2& p) { B2_NOT_USED(p); }
-    void mouse_move(const b2Vec2& p) { B2_NOT_USED(p); }
-
+    //change here
+    virtual void mouse_down(const b2Vec2& p); //{ B2_NOT_USED(p); }//its was defined here.
+    virtual void mouse_up(const b2Vec2& p); //{ B2_NOT_USED(p); }//it should've been declared
+    void mouse_move(const b2Vec2& p) ;//{ B2_NOT_USED(p); }
     
+    void shift_mouse_down(const b2Vec2& p) { B2_NOT_USED(p); }
+
+
+
     // Let derived tests know that a joint was destroyed.
     virtual void joint_destroyed(b2Joint* joint) { B2_NOT_USED(joint); }
-    
+
     // Callbacks for derived classes.
-    virtual void begin_contact(b2Contact* contact) { B2_NOT_USED(contact); }
-    virtual void end_contact(b2Contact* contact) { B2_NOT_USED(contact); }
+    void BeginContact(b2Contact* contact) { 
+        
+       
+        bodyA =contact->GetFixtureA()->GetBody();
+         bodyB =contact->GetFixtureB()->GetBody();
+       
+        if(bodyA->GetUserData() != NULL || bodyB->GetUserData() !=NULL)
+        {
+          
+  
+          m_contact = true;
+          
+        }
+        
+
+     }
+    void EndContact(b2Contact* contact) {  m_contact = false;}
     virtual void pre_solve(b2Contact* contact, const b2Manifold* oldManifold);
     virtual void post_solve(const b2Contact* contact, const b2ContactImpulse* impulse)
     {
@@ -150,25 +204,48 @@ namespace cs251
       B2_NOT_USED(impulse);
     }
 
+ 
+
+
+
   //!How are protected members different from private memebers of a class in C++ ?
   protected:
 
     //! What are Friend classes?
     friend class contact_listener_t;
-    
-    b2Body* m_ground_body;
-    b2AABB m_world_AABB;
+    friend class ContactListener;
+
+    b2Body* m_ground_body;//represents the gorund body
+
+    b2AABB m_world_AABB;//
     contact_point_t m_points[k_max_contact_points];
     int32 m_point_count;
 
     debug_draw_t m_debug_draw;
     int32 m_text_line;
-    b2World* m_world;
+    
 
     int32 m_step_count;
-    
+
     b2Profile m_max_profile;
     b2Profile m_total_profile;
+    b2Body *bodyc;
+    b2MouseJoint *mousej;//This is the mouse joint btw mouse and object.
+    b2Vec2 m_mouseWorld;//
+
+  public:
+    b2World* m_world;
+    bool m_contact;
+    b2Body* bodyB, *bodyA;
+    b2Body* sbody;
+    b2Body *bodydiscl,*bodydiscr,*body1,*body2,*body3,*sbody1, *line1b1,*bodycl;
+    bool one ;
+    
+    
+      
+
+  
+
   };
 }
 
