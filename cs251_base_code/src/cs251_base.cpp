@@ -111,7 +111,7 @@ void base_sim_t::step(settings_t* settings)
 
       m_contact = false;
       if(bodyB==sbody){
-        float sp = 4.3;
+        float sp = 3.87;
         bodyB->SetTransform(b2Vec2(20.0f,25.0f),0.0f);
         bodyB->SetLinearVelocity(b2Vec2(-5.0,0.0));
         bodydiscl->SetAngularVelocity(-sp);
@@ -123,11 +123,11 @@ void base_sim_t::step(settings_t* settings)
       else if(bodyB==sbody1)
       {
 
-         bodydiscl->SetAngularVelocity(-3.14/2.5);
-        bodydiscr->SetAngularVelocity(-3.14/2.5);
-        body1->SetAngularVelocity(-3.14/2.5);
-        body2->SetAngularVelocity(-3.14/2.5);
-        body3->SetAngularVelocity(-3.14/2.5);
+         bodydiscl->SetAngularVelocity(-3.14/6.4);
+        bodydiscr->SetAngularVelocity(-3.14/6.4);
+        body1->SetAngularVelocity(-3.14/6.4);
+        body2->SetAngularVelocity(-3.14/6.4);
+        body3->SetAngularVelocity(-3.14/6.4);
         one = false;
       }
       else if(one == true )
@@ -135,8 +135,8 @@ void base_sim_t::step(settings_t* settings)
 
         if(bodyA==bodycl)
       {
-        bodyB->SetTransform(b2Vec2(11.5f,38.0f),0.0f);
-      bodyB->SetLinearVelocity(b2Vec2(0.0,50.0));  
+        bodyB->SetTransform(b2Vec2(12.0f,38.0f),0.0f);
+      bodyB->SetLinearVelocity(b2Vec2(0.0,41.0));  
       }
       else {
       bodyB->SetTransform(b2Vec2(-36.0f,34.0f),0.0f);

@@ -1,4 +1,4 @@
-FILE(REMOVE_RECURSE
+file(REMOVE_RECURSE
   "CMakeFiles/Box2D.dir/Dynamics/Joints/b2DistanceJoint.cpp.o"
   "CMakeFiles/Box2D.dir/Dynamics/Joints/b2FrictionJoint.cpp.o"
   "CMakeFiles/Box2D.dir/Dynamics/Joints/b2GearJoint.cpp.o"
@@ -50,6 +50,6 @@ FILE(REMOVE_RECURSE
 )
 
 # Per-language clean rules from dependency scanning.
-FOREACH(lang CXX)
-  INCLUDE(CMakeFiles/Box2D.dir/cmake_clean_${lang}.cmake OPTIONAL)
-ENDFOREACH(lang)
+foreach(lang CXX)
+  include(CMakeFiles/Box2D.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

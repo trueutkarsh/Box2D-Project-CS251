@@ -43,7 +43,13 @@ namespace cs251
   /**  The is the constructor 
    * This is the documentation block for the constructor.
    */ 
+   ///Following is code for mouse_joint
+   ///Three functions mouse_down(),mouse_up(),mouse_drag() have been defined so as to,
+   /// simulate click and drag of objects in the simulation.
 
+   ///Following is the code for mouse_down()
+   ///It basically creates(on double clicking) a joint if it does not exists between mouse and object
+   ///mouse_j is the joint
    void base_sim_t :: mouse_down(const b2Vec2& p) {//when any object is clicked
     m_mouseWorld = p;
      if(base_sim_t::mousej!=NULL)//if the joint is already there return.
@@ -77,6 +83,8 @@ namespace cs251
     }
   }
 
+///Follwing is the code for mouse_up() function
+  ///It basically breaks the join formed between mouse and object,when mouse is released.
 void  base_sim_t:: mouse_up(const b2Vec2& p) {//when mouse is released
 
     if (mousej)//if mouse joint exists
@@ -90,6 +98,9 @@ void  base_sim_t:: mouse_up(const b2Vec2& p) {//when mouse is released
 
     }
 
+    ///Following is the code for mouse_move() function.
+    ///It basically moves the already joint object,according to how you drag the mouse.
+    ///
 void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
         m_mouseWorld = p;
         if (mousej != NULL)//if mouse joint exists
@@ -117,20 +128,13 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
       b1 = m_world->CreateBody(&bd); 
       b1->CreateFixture(&shape, 0.0f);
     }
-    /*      
-    //Top horizontal shelf
+    ///Dominos
+    ///Follwing is the code for dominos (*)
+
     {
-      b2PolygonShape shape;
-      shape.SetAsBox(6.0f, 0.25f);
-	
-      b2BodyDef bd;
-      bd.position.Set(-31.0f, 30.0f);
-      b2Body* ground = m_world->CreateBody(&bd);
-      ground->CreateFixture(&shape, 0.0f);
-    }
-*/
-    //Dominos
-    {
+      ///var shape
+      ///type b2PolygonShape
+      ///description of shape of dominos	
       b2PolygonShape shape;
       shape.SetAsBox(0.1f, 1.0f);
 	
@@ -148,279 +152,12 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
 	  body->CreateFixture(&fd);
 	}
     }
-      /*
-    //Another horizontal shelf
-    {
-      b2PolygonShape shape;
-      shape.SetAsBox(7.0f, 0.25f, b2Vec2(-20.f,20.f), 0.0f);
-	
-      b2BodyDef bd;
-      bd.position.Set(1.0f, 6.0f);
-      b2Body* ground = m_world->CreateBody(&bd);
-      ground->CreateFixture(&shape, 0.0f);
-    }
+//-------------------------------------------------------------------------------//
+    ///Follwing is code for entry point of balls,which consists of lines and plygon shaped divider
 
-
-    //The pendulum that knocks the dominos off
-    {
-      b2Body* b2;
-      {
-	b2PolygonShape shape;
-	shape.SetAsBox(0.25f, 1.5f);
-	  
-	b2BodyDef bd;
-	bd.position.Set(-36.5f, 28.0f);
-	b2 = m_world->CreateBody(&bd);
-	b2->CreateFixture(&shape, 10.0f);
-      }
-	
-      b2Body* b4;
-      {
-	b2PolygonShape shape;
-	shape.SetAsBox(0.25f, 0.25f);
-	  
-	b2BodyDef bd;
-	bd.type = b2_dynamicBody;
-	bd.position.Set(-40.0f, 33.0f);
-	b4 = m_world->CreateBody(&bd);
-	b4->CreateFixture(&shape, 2.0f);
-      }
-	
-      b2RevoluteJointDef jd;
-      b2Vec2 anchor;
-      anchor.Set(-37.0f, 40.0f);
-      jd.Initialize(b2, b4, anchor);
-      m_world->CreateJoint(&jd);
-    }
-      
-    //The train of small spheres
-    {
-      b2Body* spherebody;
-	
-      b2CircleShape circle;
-      circle.m_radius = 0.5;
-	
-      b2FixtureDef ballfd;
-      ballfd.shape = &circle;
-      ballfd.density = 1.0f;
-      ballfd.friction = 0.0f;
-      ballfd.restitution = 0.0f;
-	
-      for (int i = 0; i < 10; ++i)
-	{
-	  b2BodyDef ballbd;
-	  ballbd.type = b2_dynamicBody;
-	  ballbd.position.Set(-22.2f + i*1.0, 26.6f);
-	  spherebody = m_world->CreateBody(&ballbd);
-	  spherebody->CreateFixture(&ballfd);
-	}
-    }
-
-    //The pulley system
-    {
-      b2BodyDef *bd = new b2BodyDef;
-      bd->type = b2_dynamicBody;
-      bd->position.Set(-10,15);
-      bd->fixedRotation = true;
-      
-      //The open box
-      b2FixtureDef *fd1 = new b2FixtureDef;
-      fd1->density = 10.0;
-      fd1->friction = 0.5;
-      fd1->restitution = 0.f;
-      fd1->shape = new b2PolygonShape;
-      b2PolygonShape bs1;
-      bs1.SetAsBox(2,0.2, b2Vec2(0.f,-1.9f), 0);
-      fd1->shape = &bs1;
-      b2FixtureDef *fd2 = new b2FixtureDef;
-      fd2->density = 10.0;
-      fd2->friction = 0.5;
-      fd2->restitution = 0.f;
-      fd2->shape = new b2PolygonShape;
-      b2PolygonShape bs2;
-      bs2.SetAsBox(0.2,2, b2Vec2(2.0f,0.f), 0);
-      fd2->shape = &bs2;
-      b2FixtureDef *fd3 = new b2FixtureDef;
-      fd3->density = 10.0;
-      fd3->friction = 0.5;
-      fd3->restitution = 0.f;
-      fd3->shape = new b2PolygonShape;
-      b2PolygonShape bs3;
-      bs3.SetAsBox(0.2,2, b2Vec2(-2.0f,0.f), 0);
-      fd3->shape = &bs3;
-       
-      b2Body* box1 = m_world->CreateBody(bd);
-      box1->CreateFixture(fd1);
-      box1->CreateFixture(fd2);
-      box1->CreateFixture(fd3);
-
-      //The bar
-      bd->position.Set(10,15);	
-      fd1->density = 34.0;	  
-      b2Body* box2 = m_world->CreateBody(bd);
-      box2->CreateFixture(fd1);
-
-      // The pulley joint
-      b2PulleyJointDef* myjoint = new b2PulleyJointDef();
-      b2Vec2 worldAnchorOnBody1(-10, 15); // Anchor point on body 1 in world axis
-      b2Vec2 worldAnchorOnBody2(10, 15); // Anchor point on body 2 in world axis
-      b2Vec2 worldAnchorGround1(-10, 20); // Anchor point for ground 1 in world axis
-      b2Vec2 worldAnchorGround2(10, 20); // Anchor point for ground 2 in world axis
-      float32 ratio = 1.0f; // Define ratio
-      myjoint->Initialize(box1, box2, worldAnchorGround1, worldAnchorGround2, box1->GetWorldCenter(), box2->GetWorldCenter(), ratio);
-      m_world->CreateJoint(myjoint);
-    }
-
-    //The revolving horizontal platform
-    {
-      b2PolygonShape shape;
-      shape.SetAsBox(2.2f, 0.2f);
-	
-      b2BodyDef bd;
-      bd.position.Set(14.0f, 14.0f);
-      bd.type = b2_dynamicBody;
-      b2Body* body = m_world->CreateBody(&bd);
-      b2FixtureDef *fd = new b2FixtureDef;
-      fd->density = 1.f;
-      fd->shape = new b2PolygonShape;
-      fd->shape = &shape;
-      body->CreateFixture(fd);
-
-      b2PolygonShape shape2;
-      shape2.SetAsBox(0.2f, 2.0f);
-      b2BodyDef bd2;
-      bd2.position.Set(14.0f, 16.0f);
-      b2Body* body2 = m_world->CreateBody(&bd2);
-
-      b2RevoluteJointDef jointDef;
-      jointDef.bodyA = body;
-      jointDef.bodyB = body2;
-      jointDef.localAnchorA.Set(0,0);
-      jointDef.localAnchorB.Set(0,0);
-      jointDef.collideConnected = false;
-      m_world->CreateJoint(&jointDef);
-    }
-
-    //The heavy sphere on the platform
-    {
-      b2Body* sbody;
-      b2CircleShape circle;
-      circle.m_radius = 1.0;
-	
-      b2FixtureDef ballfd;
-      ballfd.shape = &circle;
-      ballfd.density = 50.0f;
-      ballfd.friction = 0.0f;
-      ballfd.restitution = 0.0f;
-      b2BodyDef ballbd;
-      ballbd.type = b2_dynamicBody;
-      ballbd.position.Set(14.0f, 18.0f);
-      sbody = m_world->CreateBody(&ballbd);
-      sbody->CreateFixture(&ballfd);
-    }
-
-
-    //The see-saw system at the bottom
-    {
-      //The triangle wedge
-      b2Body* sbody;
-      b2PolygonShape poly;
-      b2Vec2 vertices[3];
-      vertices[0].Set(-1,0);
-      vertices[1].Set(1,0);
-      vertices[2].Set(0,1.5);
-      poly.Set(vertices, 3);
-      b2FixtureDef wedgefd;
-      wedgefd.shape = &poly;
-      wedgefd.density = 10.0f;
-      wedgefd.friction = 0.0f;
-      wedgefd.restitution = 0.0f;
-      b2BodyDef wedgebd;
-      wedgebd.position.Set(30.0f, 0.0f);
-      sbody = m_world->CreateBody(&wedgebd);
-      sbody->CreateFixture(&wedgefd);
-
-      //The plank on top of the wedge
-      b2PolygonShape shape;
-      shape.SetAsBox(15.0f, 0.2f);
-      b2BodyDef bd2;
-      bd2.position.Set(30.0f, 1.5f);
-      bd2.type = b2_dynamicBody;
-      b2Body* body = m_world->CreateBody(&bd2);
-      b2FixtureDef *fd2 = new b2FixtureDef;
-      fd2->density = 1.f;
-      fd2->shape = new b2PolygonShape;
-      fd2->shape = &shape;
-      body->CreateFixture(fd2);
-
-      b2RevoluteJointDef jd;
-      b2Vec2 anchor;
-      anchor.Set(30.0f, 1.5f);
-      jd.Initialize(sbody, body, anchor);
-      m_world->CreateJoint(&jd);
-
-      //The light box on the right side of the see-saw
-      b2PolygonShape shape2;
-      shape2.SetAsBox(2.0f, 2.0f);
-      b2BodyDef bd3;
-      bd3.position.Set(40.0f, 2.0f);
-      bd3.type = b2_dynamicBody;
-      b2Body* body3 = m_world->CreateBody(&bd3);
-      b2FixtureDef *fd3 = new b2FixtureDef;
-      fd3->density = 40.0f;
-      fd3->shape = new b2PolygonShape;
-      fd3->shape = &shape2;
-      body3->CreateFixture(fd3);
-    }*/
-      //spring system
-    /*{
-      b2PolygonShape springbrs;
-      springbrs.SetAsBox(2.0f, 2.0f);
-      
-      b2BodyDef springbrd;
-      springbrd.position.Set(-55.0f, 2.0f);
-      springbrd.type = b2_dynamicBody;
-      b2Body* springbr = m_world->CreateBody(&springbrd);
-      
-      b2FixtureDef *springbrf = new b2FixtureDef;
-      springbrf->density = 100.0f;
-      springbrf->friction = 0.00f;
-      springbrf->restitution = 0.5f;
-      springbrf->shape = new b2PolygonShape;
-      springbrf->shape = &springbrs;
-      springbr->CreateFixture(springbrf);
-
-      b2BodyDef springbld;
-      springbld.position.Set(-57.0f,2.0f);
-      springbld.type=b2_dynamicBody;
-      b2Body* springbl = m_world->CreateBody(&springbld);
-
-      b2FixtureDef *springblf = new b2FixtureDef;
-      springblf->density = 100.0f;
-      springblf->shape = new b2PolygonShape;
-      springblf->shape = &springbrs;
-      springblf->friction = 0.00f;
-      springblf->restitution = 0.5f;
-      springbl->CreateFixture(springblf);
-
-      //spring joint
-      b2DistanceJointDef spring_joint;
-      spring_joint.bodyA = springbr;
-      spring_joint.bodyB = springbl;
-      spring_joint.localAnchorA.Set(0, 0);
-      spring_joint.localAnchorB.Set(0, 0);
-      spring_joint.length=5.0f;
-      spring_joint.frequencyHz = 1;
-      spring_joint.dampingRatio = 0.0f;
-      spring_joint.collideConnected = true;
-      
-      m_world->CreateJoint(&spring_joint); 
-
-
-
-    }*/
     //polygon shape
-
+    ///Following is code for five sided polygon(divider) present at the divider(left top),place where balls
+    ///are divided.
     {
       b2Body* pentagon;
       b2PolygonShape pentagons;
@@ -463,10 +200,10 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
       jointDef.localAnchorB.Set(0,0);
       jointDef.collideConnected = false;
       m_world->CreateJoint(&jointDef);
-
-
-    }
+  }
     //lines3
+    ///Following is the code for lines which cover the divider from left and right and prevents balls
+    ///from moving here and there
     {
       b2PolygonShape line1s;
       line1s.SetAsBox(0.0f, 4.0f);
@@ -537,6 +274,8 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
     }
 
 //spherballs starting
+	///Following is the code for the sphere balls which start the complete the machine.
+    ///
 
     {
       b2Body* spherebody;
@@ -560,9 +299,14 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
   }
     }
 //  the plank and the ball system
+  	///Following is the code for triangular wedge,plank system(see saw ) just present below the 
+  	///entry of the balls.  
+  	///It has three components a traingular wedge , a plank attached to it and ball present over it..
+
   {
       float DEGTORAD = 3.14/180;
       //The triangle wedge
+      //Following is the code for triangular wedge which forms the bas for see-saw.
       b2Body* sbody;
       b2PolygonShape poly;
       b2Vec2 vertices[3];
@@ -579,8 +323,8 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
       wedgebd.position.Set(-15.0f, 25.0f);
       sbody = m_world->CreateBody(&wedgebd);
       sbody->CreateFixture(&wedgefd);
-
-      //The plank on top of the wedge
+      ///Follwing is the code for the plank present on the
+      //top of the wedge.
       b2PolygonShape shape;
       shape.SetAsBox(5.0f, 0.2f);
       b2BodyDef bd2;
@@ -603,7 +347,7 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
       m_world->CreateJoint(&jd);
 
       //the sphere on the plank
-
+      ///Follwing is the code for sphere present just over see saw initially.
       b2Body* spherebody;
   
       b2CircleShape circle;
@@ -622,7 +366,11 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
     spherebody->CreateFixture(&ballfd);
 
     //reflection lines
+    ///Following is the code for the reflection lines  present on the middletop of canvas
+    ///It consists of two lines,both  with high coefficient of resitution so as to increase
+    ///the speed of ball.
     {
+    	///This is the code for first line
           b2PolygonShape line1s;
       line1s.SetAsBox(0.0f, 10.0f);
       
@@ -637,6 +385,7 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
     }
 
     {
+    	///This is the code for second line.
           b2PolygonShape line1s;
       line1s.SetAsBox(0.0f, 8.0f);
       
@@ -679,12 +428,16 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
     }
 
     //pulley system at right
+   /// Following is code for pulley system present on right.
+    ///It consists of an open box and the horizontal  bar.
+    ///Both of them are joint by pullry joint.
     {
       b2BodyDef *bd = new b2BodyDef;
       bd->type = b2_dynamicBody;
       bd->position.Set(12.5,35);
       bd->fixedRotation = true;
-      
+      ///Following is the code for Open box
+
       //The open box
       b2FixtureDef *fd1 = new b2FixtureDef;
       fd1->density = 10.0;
@@ -715,13 +468,13 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
       box1->CreateFixture(fd1);
       box1->CreateFixture(fd2);
       box1->CreateFixture(fd3);
-
+      ///Following is the code for horizonatl bar
       //The bar
       bd->position.Set(16,35);  
       fd1->density = 34.0;    
       b2Body* box2 = m_world->CreateBody(bd);
       box2->CreateFixture(fd1);
-
+      ///Following is the code for the pulley joint between them.
       // The pulley joint
       b2PulleyJointDef* myjoint = new b2PulleyJointDef();
       b2Vec2 worldAnchorOnBody1(12.5, 35); // Anchor point on body 1 in world axis
@@ -734,9 +487,12 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
     }
 
     // the infinite antigravity dominos
+    ///Following is the code for upsided dominos attached to the horizontal bar
+    ///They have been attached to the bar upsided down through antigravity simulation.
 
     {
     	//Dominos
+    ///Following is the definition of upsided dominos	
     {
       b2PolygonShape shape;
       shape.SetAsBox(0.2f, 0.5f);
@@ -761,6 +517,7 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
     // the plaform 
     {
     	    //Another horizontal shelf
+    ///Following is the definition of horizontal shelf to which the upsided dominos are attached.	
     {
       b2PolygonShape shape;
       shape.SetAsBox(7.0f, 0.25f, b2Vec2(-20.f,20.f), 0.0f);
@@ -774,10 +531,14 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
     
     }
     // the hydraulics
-
-    {
+    ///Follwoing is the code for hydraulics portion of the project
+    ///The liquid is has been denoted by collection very tiny balls(liquid particles).
+    ///It is contained in a U shaped box(two open joint container) open from two sides with a platform on one side.
+    ///pushing the platform down,pushes the liquid out of container
 
     	{	 //The open box 1
+
+    	///Follwoing is the structural defintion of the open container 1.
     		b2BodyDef *bd = new b2BodyDef;
       bd->type = b2_staticBody;
       bd->position.Set(5.5,21);
@@ -817,6 +578,7 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
    //The open box2
   {
 
+  		///Following is the code for open container 2.
   		b2BodyDef *bd = new b2BodyDef;
       bd->type = b2_staticBody;
       bd->position.Set(5,19.8);
@@ -856,7 +618,7 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
 	// the infinite water
 
 	{
-
+///Following is the code for water particles-------------------------------------------------
 {
       b2Body* spherebody;
   
@@ -882,6 +644,8 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
 	}
 	//the  closing slid
  {
+ 	///Container 1 has a closing lid .
+ 	///Follwoing is its code.
           b2PolygonShape line1s;
       line1s.SetAsBox(1.2f, 0.1f);
       
@@ -900,7 +664,11 @@ line1bd.position.Set(3.3,25.0);
     
 //----------------------------------------------------------
 //the rotating wings with cover
+    ///Following is the code for rotating wings with cover present on the left side.
+    ///It basically takes ball from one side of the wing,sends it to bottom and returns it back
+    /// to top through rotations.
     {
+    	///Following is the code for side covers,three lines which cover up the fans.
         {
             b2PolygonShape funnelsr;
             funnelsr.SetAsBox(0.0f, 7.0f);
@@ -957,7 +725,9 @@ line1bd.position.Set(3.3,25.0);
             //change groupindex of other objects
             //this is the new rotating wind mill
 
-
+        	///Following is the code for rotating fans
+        	///It basically consisits of two rectangular bodies attached to each other.
+        	///revolute joint has been used here,for continuous rotation of fans.
             b2PolygonShape shape,shape3;
             shape.SetAsBox(1.6f, 0.2f);
             shape3.SetAsBox(0.2f,1.6f);
@@ -1019,7 +789,9 @@ line1bd.position.Set(3.3,25.0);
 
 
     }
-    
+    	///Following is the code for the blast which takes place at the start,throws a small ball
+    	///from left tight to left.
+    	///Ray technique has been used for the blast simulation.
   {
           int numRays=1;
           float blastPower=23.0f;
@@ -1054,10 +826,14 @@ line1bd.position.Set(3.3,25.0);
 
 }
 // teleporter
+
+///At many places in the simulation,objects suddenly diappear from one place and appear somewhere else
+///Following is the code for the teleporter,which is being used at multiple places.
+///Specific objects which get in contact with teleporter,have sudden change in their positions.
 { 
   float shift = -22.5;
   float shifty = 1.5;
-
+///Following is the code for teleporter 1 
 			{
 
 				b2Vec2 vs[5];
@@ -1113,7 +889,7 @@ line1bd.position.Set(3.3,25.0);
 }
 
 // teleporter 2
-
+///Following is the code 2nd teleporter.
 { 
   float shift = 22.0;
   float shifty = 5.0;
@@ -1178,7 +954,7 @@ line1bd.position.Set(3.3,25.0);
 //teleporter 3
 
 // teleporter 2
-
+//Following is the code for teleporter 3.
 { 
   float shift = 8.0;
   float shifty = 30.0;
@@ -1242,7 +1018,8 @@ line1bd.position.Set(3.3,25.0);
 
 
 
-
+///There is a curverd path on the left,which consisits of arcs and curves.
+///Following is the code for the that curved path.
 
 // the curved path
 
@@ -1268,6 +1045,7 @@ line1bd.position.Set(3.3,25.0);
         }
 
     }
+
 
        {
         float x0 = -36.0f, y0 = 24.0, r= 8,init=0.09;
@@ -1303,6 +1081,8 @@ line1bd.position.Set(3.3,25.0);
     }
 
 // the glass
+///There's a glass which contains both the liquid(water) and circles(fruit juice),finally.
+    ///It appears at almost the end of simulation.
 
     {
 
@@ -1346,8 +1126,12 @@ line1bd.position.Set(3.3,25.0);
 	}
     }
 // the platform and sphere
-
+///-----------------------------------------------------------------------------------------///
+///Following is the code for the platform and the ball present at right top.
+///    
     {
+
+    	///The platform
     	{
       b2PolygonShape shape;
       shape.SetAsBox(2.2f, 0.2f);
@@ -1377,7 +1161,7 @@ line1bd.position.Set(3.3,25.0);
       m_world->CreateJoint(&jointDef);
     }
 
-    //The heavy sphere on the platform
+    ///The heavy sphere on the platform
     {
       b2Body* sbody;
       b2CircleShape circle;
@@ -1398,6 +1182,9 @@ line1bd.position.Set(3.3,25.0);
 
     }
 // the pendulum
+
+    ///Following is the code for the pendulum present on right top which knocks off the the dominos.
+
     {
       b2Body* b2;
       {
@@ -1434,6 +1221,7 @@ line1bd.position.Set(3.3,25.0);
 
     // the flying sphere
    {
+   	///Following is the code for sphere which flies away during simulation.
     {
       b2Body* sbody;
       b2CircleShape circle;
@@ -1485,7 +1273,7 @@ line1bd.position.Set(3.3,25.0);
 	{
 
 	// the curved path
-
+		//Following is the code for the two curved arcs present at the right bottom.
    {
         float x0 = -41.0f, y0 = 26.0, r= 8,init=0.00;
 
@@ -1556,6 +1344,9 @@ line1bd.position.Set(3.3,25.0);
     		
 	}
    //  the tick tock
+	///Following is the code for multiplatform lever design.Its consists of for platforms each having
+	///ball and rotating lever at the end.
+	///Its consists of four platforms each having a lever attached to it at alternate ends. 
 	{
 
 		{
@@ -1592,6 +1383,7 @@ line1bd.position.Set(3.3,25.0);
 			}
 	  }
 	  	//The  spheres on the platform of tick tock
+	  ///Following is the code for the  the balls present on the tick-tock platform.
     {
      
       b2CircleShape circle;
@@ -2166,23 +1958,9 @@ line1bd.position.Set(3.3,25.0);
       sbody1->SetUserData(this);
     }
   }
-  
-
-
-
-
-
-
-
-
-
-
-	
-
-}
-}
-}
+  }
 }
 
+}
   sim_t *sim = new sim_t("Dominos", dominos_t::create);
 }

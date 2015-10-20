@@ -2,26 +2,29 @@
 
 # Programs
 SHELL 	= bash
-CC     	= g++
+CC     	= g++ -pg
 LD	= ld
-RM 	= rm
+RM 	= rm -rf
 ECHO	= /bin/echo
 CAT	= cat
 PRINTF	= printf
 SED	= sed
 DOXYGEN = doxygen
+GPROF = gprof
+DOT = dot -Tpng
+PYTHON = python
 ######################################
 # Project Name (generate executable with this name)
 TARGET = cs251_base
 
 # Project Paths
-PROJECT_ROOT=./
+PROJECT_ROOT=.
 EXTERNAL_ROOT=$(PROJECT_ROOT)/external
 SRCDIR = $(PROJECT_ROOT)/src
 OBJDIR = $(PROJECT_ROOT)/obj
 BINDIR = $(PROJECT_ROOT)/bin
 DOCDIR = $(PROJECT_ROOT)/doc
-
+PROFILE = $(PROJECT_ROOT)/project_profile
 # Library Paths
 BOX2D_ROOT=$(EXTERNAL_ROOT)
 GLUI_ROOT=/usr
@@ -54,12 +57,47 @@ WARN_FMT="${WARN_COLOR}%30s\n${NO_COLOR}"
 
 SRCS := $(wildcard $(SRCDIR)/*.cpp)
 INCS := $(wildcard $(SRCDIR)/*.hpp)
+
 OBJS := $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 
-.PHONY: all setup doc clean distclean
+.PHONY: all setup doc clean distclean release profile report codeDoc
 
 all: setup $(BINDIR)/$(TARGET)
+
+codeDoc:
+	@$(ECHO) -n "Generating Doxygen Documentation Of Group-23...  "
+	@$(RM) -rf doc/html
+	@$(DOXYGEN) $(DOCDIR)/Doxyfile 2 > /dev/null
+	@$(ECHO) "Done"
+
+report:report_group_23.tex
+	@$(PDFLATEX) $@.tex > /dev/null
+	@bibtex $@ > /dev/null
+	@$(PDFLATEX) $@.tex > /dev/null
+	@$(PDFLATEX) $@.tex > /dev/null
+
+profile:
+	@if [ ! -f "$(PROJECT_ROOT)/gmon.out" ] ; then \
+		$(PRINTF) 'Please run the executable from the project directory through terminal once before profiling..\n' ;\
+	fi
+
+	@if [ -f "$(PROJECT_ROOT)/gmon.out" ] ; then 
+		$(PRINTF) "Profiling \n"
+		mkdir -p project_profile ;\
+		$(GPROF) $(PROJECT_ROOT)/bin/cs251_base > $(PROFILE)/Analysis.txt ;\
+		$(PRINTF) "Generating analysis txt file\n"
+		$(PYTHON) gprof2dot.py $(PROFILE)/Analysis.txt > $(PROFILE)/Analysis.dot ;\
+		$(PRINTF) "Generating Call Graph"
+		$(DOT) $(PROFILE)/Analysis.dot  -o $(PROFILE)/Callgraph.png ;\
+		$(PRINTF) "Done\n" ;\
+	fi
+
+
+release:
+
+
+
 
 setup:
 	@$(ECHO) "Setting up compilation..."
@@ -68,7 +106,7 @@ setup:
 
 $(BINDIR)/$(TARGET): $(OBJS)
 	@$(PRINTF) "$(MESG_COLOR)Building executable:$(NO_COLOR) $(FILE_COLOR) %16s$(NO_COLOR)" "$(notdir $@)"
-	@$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS) 2> temp.log || touch temp.err
+	@$(CC) -O3 -o $@ $(LDFLAGS) $(OBJS) $(LIBS) 2> temp.log || touch temp.err
 	@if test -e temp.err; \
 	then $(PRINTF) $(ERR_FMT) $(ERR_STRING) && $(CAT) temp.log; \
 	elif test -s temp.log; \
@@ -81,7 +119,7 @@ $(BINDIR)/$(TARGET): $(OBJS)
 
 $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	@$(PRINTF) "$(MESG_COLOR)Compiling: $(NO_COLOR) $(FILE_COLOR) %25s$(NO_COLOR)" "$(notdir $<)"
-	@$(CC) $(CPPFLAGS) -c $< -o $@ -MD 2> temp.log || touch temp.err
+	@$(CC) -O3 $(CPPFLAGS) -c $< -o $@ -MD 2> temp.log || touch temp.err
 	@if test -e temp.err; \
 	then $(PRINTF) $(ERR_FMT) $(ERR_STRING) && $(CAT) temp.log; \
 	elif test -s temp.log; \
@@ -90,16 +128,11 @@ $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	fi;
 	@$(RM) -f temp.log temp.err
 
-doc:
-	@$(ECHO) -n "Generating Doxygen Documentation ...  "
-	@$(RM) -rf doc/html
-	@$(DOXYGEN) $(DOCDIR)/Doxyfile 2 > /dev/null
-	@$(ECHO) "Done"
 
 clean:
 	@$(ECHO) -n "Cleaning up..."
-	@$(RM) -rf $(OBJDIR) *~ $(DEPS) $(SRCDIR)/*~
+	@$(RM) $(OBJDIR)/* $(SRCDIR)/*~ $(BINDIR)/* $(PROFILE)/*
 	@$(ECHO) "Done"
 
 distclean: clean
-	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
+	@$(RM) $(BINDIR) $(OBJDIR) $(DOCDIR)/html $(PROFILE)
