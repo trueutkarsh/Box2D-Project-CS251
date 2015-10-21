@@ -105,7 +105,7 @@ void base_sim_t::step(settings_t* settings)
       m_text_line += 15;
     }
 
-    // my change
+/// To Transform objects from one place to another , a conditional statement to whether to transform the object in present step
     
     if(m_contact == true && one ==true) {   
 

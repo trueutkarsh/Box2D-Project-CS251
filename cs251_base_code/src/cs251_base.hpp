@@ -180,6 +180,7 @@ public:
     virtual void joint_destroyed(b2Joint* joint) { B2_NOT_USED(joint); }
 
     // Callbacks for derived classes.
+    /// Overrided the begin contact function in accordance to get executed further on being touched with the teleporter
     void BeginContact(b2Contact* contact) { 
         
        
@@ -195,7 +196,8 @@ public:
         }
         
 
-     }
+     } 
+     /// Endcontact overrided to set m_contact false when the contact from teleporter breaks
     void EndContact(b2Contact* contact) {  m_contact = false;}
     virtual void pre_solve(b2Contact* contact, const b2Manifold* oldManifold);
     virtual void post_solve(const b2Contact* contact, const b2ContactImpulse* impulse)

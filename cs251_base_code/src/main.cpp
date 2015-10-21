@@ -120,6 +120,7 @@ int main(int argc, char** argv)
   
   entry = sim;
   test = entry->create_fcn();
+  /// $SET Contact liStener for the base_sim_t object using SetContactListener function
   test->m_world->SetContactListener(test);
   
   //! This initializes GLUT

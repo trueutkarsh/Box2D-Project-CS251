@@ -516,13 +516,13 @@ void  base_sim_t:: mouse_move(const b2Vec2& p) {//when pressed
     }
 //! **************************************************************************************************************************************\n
 
-    //! The Platform ---------------------------------------------------------------------------------------------------------------------------------\n
+    //!  ---------------------------------------------------------------------------------------------------------------------------------\n
     // the plaform 
     {
     	    //Another horizontal shelf
     //Following is the definition of horizontal shelf to which the upsided dominos are attached.	
     {
-      b2PolygonShape shape; /** $Shape :Box with Dimension 7 * 0.25 */
+      b2PolygonShape shape;
       shape.SetAsBox(7.0f, 0.25f, b2Vec2(-20.f,20.f), 0.0f);
 	
       b2BodyDef bd;
@@ -843,7 +843,6 @@ line1bd.position.Set(3.3,25.0);
 ///At many places in the simulation,objects suddenly diappear from one place and appear somewhere else
 ///Following is the code for the teleporter,which is being used at multiple places.
 ///Specific objects which get in contact with teleporter,have sudden change in their positions.
-/// There are three teleporters in the world
 { 
   float shift = -22.5;
   float shifty = 1.5;
@@ -852,7 +851,7 @@ line1bd.position.Set(3.3,25.0);
 
 				b2Vec2 vs[5];     /** $Shape : Oval */
 
-			vs[0].Set(2.0f+ shift, 10.6f+shifty); 
+			vs[0].Set(2.0f+ shift, 10.6f+shifty);
 
 			vs[1].Set(1.0f+shift, 10.25f+shifty);
 
@@ -892,7 +891,7 @@ line1bd.position.Set(3.3,25.0);
 			b2BodyDef bd;
 
 			bodyc = m_world->CreateBody(&bd);
-			bodyc->SetUserData(this); /** $Set User data specified to ddetect collision */
+			bodyc->SetUserData(this);
 			b2FixtureDef fd;
 			fd.shape = &chain;
 
@@ -902,6 +901,8 @@ line1bd.position.Set(3.3,25.0);
 			}
 }
 
+// teleporter 2
+///Following is the code 2nd teleporter.
 { 
   float shift = 22.0;
   float shifty = 5.0;
@@ -965,7 +966,8 @@ line1bd.position.Set(3.3,25.0);
 
 //teleporter 3
 
-
+// teleporter 2
+//Following is the code for teleporter 3.
 { 
   float shift = 8.0;
   float shifty = 30.0;
@@ -1030,9 +1032,9 @@ line1bd.position.Set(3.3,25.0);
 
 //! **************************************************************************************************************************************\n
 
-    //! Curved Path ---------------------------------------------------------------------------------------------------------------------------------\n
+    //! Base ---------------------------------------------------------------------------------------------------------------------------------\n
 ///There is a curverd path on the left,which consisits of arcs and curves.
-///There are in total 2 Curved paths and 2 skating platform having more or less same properties
+///Following is the code for the that curved path.
 
 // the curved path
 
@@ -1040,12 +1042,12 @@ line1bd.position.Set(3.3,25.0);
         float x0 = -35.0f, y0 = 23.0, r= 8,init=0.00;
 
         b2Body* b1; 
-        b2EdgeShape shape; /**$Shape : Circular arc */
+        b2EdgeShape shape; 
         b2BodyDef bd;
         b1 = m_world->CreateBody(&bd);
         float x=x0 - r*init ;
         float y=y0 + r * sqrt(1 - init*init);
-        for(float i=init; i <=0.9; i+=0.05){ /** Body Type : Static path */
+        for(float i=init; i <=0.9; i+=0.05){
           float tempx = x0 - r * i;
           float tempy = y0 + r * sqrt(1 - i*i);
           shape.Set(b2Vec2(tempx,tempy), b2Vec2(x, y));
@@ -1094,11 +1096,10 @@ line1bd.position.Set(3.3,25.0);
     }
 //! **************************************************************************************************************************************\n
 
-    //! Container ---------------------------------------------------------------------------------------------------------------------------------\n
-// th
+    //! Base ---------------------------------------------------------------------------------------------------------------------------------\n
+// the glass
 ///There's a glass which contains both the liquid(water) and circles(fruit juice),finally.
-    ///It appears at almost the end of simulation.\n
-	///Its code is similar to open box with properties changed\n 
+    ///It appears at almost the end of simulation.
 
     {
 
@@ -1107,12 +1108,12 @@ line1bd.position.Set(3.3,25.0);
 
   		b2BodyDef *bd = new b2BodyDef;
       bd->type = b2_dynamicBody;
-      bd->position.Set(-52.0,1200.0); /** $Initial Position -52 , 1200 */
+      bd->position.Set(-52.0,1200.0);
       bd->fixedRotation = true;
 
       b2FixtureDef *fd1 = new b2FixtureDef;
-      fd1->density = 11.0; /** $Density : 11 */
-      fd1->friction = 110.0; /** $Friction : 110 */
+      fd1->density = 11.0;
+      fd1->friction = 110.0;
       fd1->restitution = 0.0f;
       fd1->shape = new b2PolygonShape;
       b2PolygonShape bs1;
@@ -1141,8 +1142,10 @@ line1bd.position.Set(3.3,25.0);
       box1->CreateFixture(fd3);
 	}
     }
-
-    
+// the platform and sphere
+///-----------------------------------------------------------------------------------------///
+///Following is the code for the platform and the ball present at right top.
+///    
     {
 
     	///The platform
@@ -1175,6 +1178,7 @@ line1bd.position.Set(3.3,25.0);
       m_world->CreateJoint(&jointDef);
     }
 
+    ///The heavy sphere on the platform
     {
       b2Body* sbody;
       b2CircleShape circle;
@@ -1196,10 +1200,10 @@ line1bd.position.Set(3.3,25.0);
     }
 //! **************************************************************************************************************************************\n
 
-    //! The pendulum ---------------------------------------------------------------------------------------------------------------------------------\n
+    //! Base ---------------------------------------------------------------------------------------------------------------------------------\n
 // the pendulum
 
-    ///Description of the code for the pendulum present on right top which knocks off the the dominos.
+    ///Following is the code for the pendulum present on right top which knocks off the the dominos.
 
     {
       b2Body* b2;
@@ -1236,25 +1240,25 @@ line1bd.position.Set(3.3,25.0);
     }
 //! **************************************************************************************************************************************\n
 
-    //! The Flying Sphere ---------------------------------------------------------------------------------------------------------------------------------\n
-    /// Its Normally a sphere ball with gravity set to negative
+    //! Base ---------------------------------------------------------------------------------------------------------------------------------\n
+    // the flying sphere
    {
-   	///Description for sphere which flies away during simulation.\n
+   	///Following is the code for sphere which flies away during simulation.
     {
       b2Body* sbody;
       b2CircleShape circle;
-      circle.m_radius = 0.8f; /** $Radius : 0.8 */
+      circle.m_radius = 0.8f;
 	  
       b2FixtureDef ballfd;
       ballfd.shape = &circle;
-      ballfd.density = 5.0f; /** $Density : 5.0 */
+      ballfd.density = 5.0f;
       ballfd.friction = 0.0f;
       ballfd.restitution = 0.0f;
       b2BodyDef ballbd;
       ballbd.type = b2_dynamicBody;
-      ballbd.position.Set(35.5f, 34.0f); /** $Position : 35.5 , 34 */
+      ballbd.position.Set(35.5f, 34.0f);
       sbody = m_world->CreateBody(&ballbd);
-       sbody->SetGravityScale(-1); /** $Gravity Scale : -1 */
+       sbody->SetGravityScale(-1);
       sbody->CreateFixture(&ballfd);
     }
     	{
@@ -1363,27 +1367,26 @@ line1bd.position.Set(3.3,25.0);
 	}
 //! **************************************************************************************************************************************\n
 
-    //! Tick Tock ---------------------------------------------------------------------------------------------------------------------------------\n
+    //! Base ---------------------------------------------------------------------------------------------------------------------------------\n
    //  the tick tock
 	///Following is the code for multiplatform lever design.Its consists of for platforms each having
-	///ball and rotating lever at the end.\n
-	///Its consists of four platforms each having a lever attached to it at alternate ends. \n
+	///ball and rotating lever at the end.
+	///Its consists of four platforms each having a lever attached to it at alternate ends. 
 	{
 
-		{  ///------------------------------------------------------------------------------------------------------------------------------\n
-///The platforms:\n
+		{
 			b2PolygonShape shape;
-			shape.SetAsBox(2.5f, 0.25f); /** $Shape : Box with Dimension 2.5 , 0.25 */
+			shape.SetAsBox(2.5f, 0.25f);
 			for(int i=0;i<4;i++){
 				b2BodyDef bd;
-				bd.position.Set(43.0f, 39.0f - i*4.0f); /** $Postion: 43.0 , 39.0 - i*4.0 where i varies from 0 to 3 */
+				bd.position.Set(43.0f, 39.0f - i*4.0f);
 				b2Body* ground = m_world->CreateBody(&bd);
 				ground->CreateFixture(&shape, 0.0f);
 
 				b2PolygonShape shape;
 				shape.SetAsBox(0.2f, 1.2f);
-				/// The vertical rotatble bars:\n
-				float pos =39.5f, a=-3.5f;  /** $Shape : Box with dimension 0.2 , 1.2 */
+
+				float pos =39.5f, a=-3.5f; 
 				if(i%2==0){ pos=46.5f; a =3.5f;}
 				b2BodyDef bd1;
 				bd1.position.Set(pos, 35.0f - i*4.0f);
@@ -1395,7 +1398,7 @@ line1bd.position.Set(3.3,25.0);
 				fd->shape = &shape;
 				body->CreateFixture(fd);
 
-				b2RevoluteJointDef jointDef; /** $Platform and bars are attached using revolute joint */
+				b2RevoluteJointDef jointDef;
 				jointDef.bodyA = body;
 				jointDef.bodyB = ground;
 				jointDef.localAnchorA.Set(0,-1.6f);
@@ -1404,18 +1407,18 @@ line1bd.position.Set(3.3,25.0);
 				m_world->CreateJoint(&jointDef);
 			}
 	  }
-	  	///The  spheres on the platform of tick tock have same basic feature of balls
+	  	//The  spheres on the platform of tick tock
 	  ///Following is the code for the  the balls present on the tick-tock platform.
     {
      
       b2CircleShape circle;
-      circle.m_radius = 0.8; /** $Radius : 0.8 */
+      circle.m_radius = 0.8;
 	for(int i =0;i<3;i++)
 	{
       b2FixtureDef ballfd;
       ballfd.shape = &circle;
-      ballfd.density = 1.0f; /** Density : 1.0 */
-      ballfd.friction = 0.01f; /** Friction: 0.01 */
+      ballfd.density = 1.0f;
+      ballfd.friction = 0.01f;
       ballfd.restitution = 0.1f;
       b2BodyDef ballbd;
       ballbd.type = b2_dynamicBody;
@@ -1573,13 +1576,12 @@ line1bd.position.Set(3.3,25.0);
 
   
 
-//! **************************************************************************************************************************************\n
-
-    //! The Conveyor Belt ---------------------------------------------------------------------------------------------------------------------------------\n
-    ///The idea is to make a rectangular chain
-    ///Then, we insert rotating discs "in" the chain
-    ///We keep a very high friction between these discs and the chain
-    ///We give the discs a constant angular velocity, due to which the conveyor belt rotates
+//The conveyor belt
+    
+    //The idea is to make a rectangular chain
+    //Then, we insert rotating discs "in" the chain
+    //We keep a very high friction between these discs and the chain
+    //We give the discs a constant angular velocity, due to which the conveyor belt rotates
   
     {
       //overall shift parameters for the entire conveyor belt system

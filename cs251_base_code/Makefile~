@@ -62,7 +62,7 @@ INCS := $(wildcard $(SRCDIR)/*.hpp)
 OBJS := $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 
-.PHONY: all setup doc clean distclean release report codeDoc profile
+.PHONY: all setup doc clean distclean release profile report codeDoc
 
 all: setup $(BINDIR)/$(TARGET)
 
@@ -74,44 +74,50 @@ codeDoc:
 
 report:reportp
 	@cd ./report/finalreport ;\
-	$(PDFLATEX) -interaction=nonstopmode main.tex  > /dev/null 2>&1 ;\
-	$(RM) ./report/finalreport/main.log > /dev/null 2>&1 ;\
-	$(RM) ./report/finalreport/main.aux > /dev/null 2>&1 ;\
-	$(RM) ./report/finalreport/main.out > /dev/null 2>&1 ;\
-	$(ECHO) -n "Report Generated"
+	$(PDFLATEX) main.tex 2>&1 > /dev/null
+	@$(RM) ./report/finalreport/main.log
+	@$(RM) ./report/finalreport/main.aux
+	@$(RM) ./report/finalreport/main.out
+
 
 reportp:
 	@cd ./report/presentation ;\
-	$(PDFLATEX) -interaction=nonstopmode main.tex  > /dev/null 2>&1 ;\
-	$(RM) ./report/presentation/main.log > /dev/null 2>&1 ;\
-	$(RM) ./report/presentation/main.aux > /dev/null 2>&1 ;\
-	$(RM) ./report/presentation/main.out > /dev/null 2>&1 ;\
-	$(RM) ./report/presentation/main.nav > /dev/null 2>&1 ;\
-	$(RM) ./report/presentation/main.anm > /dev/null 2>&1 ;\
-	$(RM) ./report/presentation/main.toc > /dev/null 2>&1 ;\
-	$(RM) ./report/presentation/main.snm > /dev/null 2>&1 ;\
+	$(PDFLATEX) main.tex > /dev/null
+	@$(RM) ./report/presentation/main.log
+	@$(RM) ./report/presentation/main.aux
+	@$(RM) ./report/presentation/main.out
+	@$(RM) ./report/presentation/main.nav
+	@$(RM) ./report/presentation/main.anm
+	@$(RM) ./report/presentation/main.toc
+	@$(RM) ./report/presentation/main.snm
 
 
 profile:
-	@if [ ! -f $(PROJECT_ROOT)/gmon.out ] ; then \
-		$(ECHO) "Gmon.out not present.. Please run executable once through the terminal in project root" ;\
-    fi
-	@if [ -f $(PROJECT_ROOT)/gmon.out ] ; then \
-		gprof $(PROJECT_ROOT)/bin/cs251_base $(PROJECT_ROOT)/gmon.out > $(PROFDIR)/Analysis.txt ;\
-		python gprof2dot.py $(PROFDIR)/Analysis.txt > $(PROFDIR)/Analysis.dot ;\
-		dot -Tpng $(PROFDIR)/Analysis.dot  -o $(PROFDIR)/Callgraph.png ;\
-		$(ECHO) "Done" ;\
+	@if [ ! -f "$(PROJECT_ROOT)/gmon.out" ] ; then \ 2>&1
+		$(PRINTF) 'Please run the executable from the project directory through terminal once before profiling..\n' ;\
+	fi
+
+	@if [ -f "$(PROJECT_ROOT)/gmon.out" ] ; then 2>&1
+		$(PRINTF) "Profiling \n"
+		mkdir -p project_profile ;\
+		$(GPROF) $(PROJECT_ROOT)/bin/cs251_base $(PROJECT_ROOT)/gmon.out > $(PROFILE)/Analysis.txt ;\ 
+		$(PRINTF) "Generating analysis txt file\n"
+		$(PYTHON) gprof2dot.py $(PROFILE)/Analysis.txt > $(PROFILE)/Analysis.dot ;\
+		$(PRINTF) "Generating Call Graph"
+		$(DOT) $(PROFILE)/Analysis.dot  -o $(PROFILE)/Callgraph.png ;\
+		$(PRINTF) "Done\n" ;\
 	fi
 
 
-release: report setup $(BINDIR)/$(TARGET) codeDoc profile
+release: profile report setup $(BINDIR)/$(TARGET)
+
+
 
 
 setup:
 	@$(ECHO) "Setting up compilation..."
 	@mkdir -p obj
 	@mkdir -p bin
-	@mkdir -p project_profile
 
 $(BINDIR)/$(TARGET): $(OBJS)
 	@$(PRINTF) "$(MESG_COLOR)Building executable:$(NO_COLOR) $(FILE_COLOR) %16s$(NO_COLOR)" "$(notdir $@)"
@@ -140,9 +146,10 @@ $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 
 clean:
 	@$(ECHO) -n "Cleaning up..."
-	@$(RM) $(OBJDIR)/* $(SRCDIR)/*~ $(PROFILE)/Analysis.dot $(PROJECT_ROOT)/gmon.out
+	@$(RM) $(OBJDIR)/* $(SRCDIR)/*~ $(BINDIR)/* $(PROFILE)/*
 	@$(ECHO) "Done"
-distclean: clean
-	@$(RM) $(BINDIR) $(OBJDIR) $(DOCDIR)/html $(PROFILE) $(DOCDIR)/doxygen_sqlite3.db
 	@$(RM) ./report/presentation/main.pdf
 	@$(RM) ./report/finalreport/main.pdf
+
+distclean: clean
+	@$(RM) $(BINDIR) $(OBJDIR) $(DOCDIR)/html $(PROFILE)

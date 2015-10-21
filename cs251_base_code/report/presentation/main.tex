@@ -34,17 +34,8 @@
 \maketitle
 \begin{frame}
     \frametitle{Overview}
-\tableofcontents[
-Motivation,
-Introduction,
-Detailed Description,
-Innovative,
-Conclusion,
-References,
-sectionstyle=show,
-] 
+\tableofcontents
 \end{frame}
-\newpage
 \section{Motivation}
 \begin{frame}
 {\centering{{\bf{Motivation}}}}
@@ -69,32 +60,34 @@ sectionstyle=show,
 \end{frame}
 
 \section{Detailed Description}
-\begin{frame}{\centering{{\bf{Internal Circuitary Design} }}}
+\begin{frame}
+{\centering{{\bf{Internal Circuitary Design} }}}
 \begin{enumerate}
 {\uncover<1->{\item \bf{Conveyer Belt}}}
 {\uncover<2->{\item
-\centering \includegraphics[width=0.8\textwidth]{conveyer} \\ \\}}
+\centering \includegraphics[width=0.8\textwidth]{conveyer} }}
 {\uncover<3->{\item The belt is construct by a linked chain of rectangular segments, and wrapping it around some wheels to function as a belt. The belt is moved by turning the wheels.}}
 {\uncover<4->{\item When two objects contact each other, the friction between them tries to stop their surfaces from moving relative to each other.The belt friction coefficient is set high.}}
 \end{enumerate}
+
 \end{frame}
-\begin{frame}{\centering{{\bf{Internal Circuitary Design}}}}
+
+\begin{frame}
+{\centering{{\bf{Internal Circuitary Design}}}}
 \begin{enumerate}
 {\uncover<1->{\item \bf{Teleporter}}}
 {\uncover<2->{\item
-\centering \includegraphics[width=0.3\textwidth]{teleporter} \\ \\}}
+\centering \includegraphics[width=0.3\textwidth]{teleporter} }}
 {\uncover<3->{\item This is a fictitious part of our project. We have used teleporter to move balls(fruits here) from one place to another. To implement this we overrided the b2ContactListener::BeginContact and EndContact functions.}}
 {\uncover<4->{\item As soon a body touches the teleporter the mcontact bool variable becomes true and under step function of the base\_sim\_t class the code under the if condition runs and transforms the location of the body to another place.}}
 \end{enumerate}
 \end{frame}
-
-
 \begin{frame}{\centering{{\bf{Internal Circuitary Design}}}}
 \begin{enumerate}
 {\uncover<1->{\item \bf{Balloons}}}
 {\uncover<2->{\item
-\centering \includegraphics[width=0.2\textwidth]{balloon} \\ \\}}
-{\uncover<3->{\item We have used a balloon in the design. The balloon triggers the System of rotating flaps. The Balloon is a Box2D circle body, whose gravity has been scaled to a negative value.}}
+\centering \includegraphics[width=0.2\textwidth]{balloon}}}
+{\uncover<3->{\item We have used a balloon in the design. The balloon triggers the System of rotating flaps. The Balloon is a Box2D circle body, whose gravity has been scaled to a negative value.}} 
 \end{enumerate}
 \end{frame}
 
@@ -103,12 +96,12 @@ sectionstyle=show,
 \begin{enumerate}
 {\uncover<1->{\item \bf{Five Gear Peeler}}}
 {\uncover<2->{\item
-\centering \includegraphics[width=0.2\textwidth]{5gear} \\ \\}}
+\centering \includegraphics[width=0.2\textwidth]{5gear} }}
 {\uncover<3->{\item The peeler has 5 rotating gears that are set to same group index as not to collide with each other and are kinematic to rotate at same speed. They are fixed to that point by a joint to the base.}}
 
 \end{enumerate}
 \end{frame}
-
+\section{Conclusions}
 \begin{frame}{\centering{{\bf{Conclusions}}}}
 \begin{enumerate}
 {\uncover<1->{\item We saw how Box2D can be used to model physical systems on a computer, of which an example is our Rube-Goldberg machine simulation.}}
